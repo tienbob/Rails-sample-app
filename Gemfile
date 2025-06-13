@@ -34,5 +34,6 @@ end
 
 group :production do
   gem "pg", "~> 1.3"
-  
+  gem "solid_cache"
+  gem "solid_queue"
 end
