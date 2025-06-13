@@ -10,14 +10,19 @@ fi
 wait_for_postgres() {
   echo "Waiting for PostgreSQL to be available..."
   
-  # Parse the DATABASE_URL to get host and port
-  if [[ -n "$DATABASE_URL" && "$DATABASE_URL" =~ postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.+) ]]; then
-    DB_HOST="${BASH_REMATCH[3]}"
-    DB_PORT="${BASH_REMATCH[4]}"
+  # Extract database URL components if DATABASE_URL is set
+  if [[ -n "$DATABASE_URL" ]]; then
+    # Example: postgres://username:password@hostname:port/database_name
+    if [[ "$DATABASE_URL" =~ postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.+) ]]; then
+      DB_HOST="${BASH_REMATCH[3]}"
+      DB_PORT="${BASH_REMATCH[4]}"
+    else
+      echo "Could not parse DATABASE_URL"
+      return 1
+    fi
   else
-    # Use individual connection parameters if DATABASE_URL is not set
-    DB_HOST="${DATABASE_HOST:-${PGHOST:-localhost}}"
-    DB_PORT="${DATABASE_PORT:-${PGPORT:-5432}}"
+    echo "DATABASE_URL is not set"
+    return 1
   fi
   
   echo "Attempting to connect to PostgreSQL at $DB_HOST:$DB_PORT..."
@@ -38,24 +43,12 @@ wait_for_postgres() {
 
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
-  if [[ -n "$DATABASE_URL" && "$DATABASE_URL" == postgres* ]] || [[ -n "$PGHOST" || -n "$DATABASE_HOST" ]]; then
+  if [[ -n "$DATABASE_URL" ]]; then
     wait_for_postgres
+    ./bin/rails db:prepare
   fi
-  
-  # Add DATABASE_URL from environment variables if not set
-  if [[ -z "$DATABASE_URL" && -n "$PGHOST" ]]; then
-    # Construct DATABASE_URL from individual parameters
-    DB_HOST="${DATABASE_HOST:-${PGHOST:-localhost}}"
-    DB_PORT="${DATABASE_PORT:-${PGPORT:-5432}}"
-    DB_NAME="${DATABASE_NAME:-${PGDATABASE:-sample_app_production}}"
-    DB_USER="${DATABASE_USERNAME:-${PGUSER:-postgres}}"
-    DB_PASS="${DATABASE_PASSWORD:-${PGPASSWORD:-}}"
-    
-    export DATABASE_URL="postgres://$DB_USER:$DB_PASS@$DB_HOST:$DB_PORT/$DB_NAME"
-    echo "Constructed DATABASE_URL from environment variables"
-  fi
-  
-  ./bin/rails db:prepare
 fi
+
+exec "${@}"
 
 exec "${@}"
