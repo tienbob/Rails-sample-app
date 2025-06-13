@@ -1,5 +1,8 @@
 source "https://rubygems.org"
 
+# Specify bundler version for compatibility with Railway
+gem "bundler", "2.6.9"
+
 gem "rails", "~> 8.0.2"
 gem "tzinfo-data"
 gem "sassc-rails",     "~> 2.1"
