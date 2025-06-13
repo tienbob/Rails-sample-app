@@ -126,7 +126,7 @@ GEM
       minitest (>= 3.0)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
-    importmap-rails (1.2.3)
+    importmap-rails (2.1.0)
       actionpack (>= 6.0.0)
       activesupport (>= 6.0.0)
       railties (>= 6.0.0)
@@ -327,7 +327,7 @@ DEPENDENCIES
   fiddle (~> 1.1.0)
   guard
   guard-minitest
-  importmap-rails (~> 1.1)
+  importmap-rails (~> 2.1)
   jbuilder (~> 2.11)
   minitest
   minitest-reporters
