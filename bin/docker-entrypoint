@@ -6,8 +6,41 @@ if [ -z "${LD_PRELOAD+x}" ]; then
     export LD_PRELOAD
 fi
 
+# Function to wait for PostgreSQL to be available
+wait_for_postgres() {
+  echo "Waiting for PostgreSQL to be available..."
+  
+  # Parse the DATABASE_URL to get host and port
+  if [[ "$DATABASE_URL" =~ postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.+) ]]; then
+    DB_HOST="${BASH_REMATCH[3]}"
+    DB_PORT="${BASH_REMATCH[4]}"
+  else
+    echo "Could not parse DATABASE_URL, using default values"
+    DB_HOST="localhost"
+    DB_PORT="5432"
+  fi
+  
+  echo "Attempting to connect to PostgreSQL at $DB_HOST:$DB_PORT..."
+  
+  # Wait for the PostgreSQL server to be available
+  for i in {1..30}; do
+    if pg_isready -h "$DB_HOST" -p "$DB_PORT" >/dev/null 2>&1; then
+      echo "PostgreSQL is available"
+      return 0
+    fi
+    echo "Waiting for PostgreSQL... attempt $i of 30"
+    sleep 1
+  done
+  
+  echo "Could not connect to PostgreSQL"
+  return 1
+}
+
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+  if [[ "$DATABASE_URL" == postgres* ]]; then
+    wait_for_postgres
+  fi
   ./bin/rails db:prepare
 fi
 
