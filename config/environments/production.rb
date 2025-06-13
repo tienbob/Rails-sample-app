@@ -31,7 +31,13 @@ Rails.application.configure do
   config.force_ssl = true
   
   # Set a fallback secret key base if master key is missing
-  config.secret_key_base = ENV["SECRET_KEY_BASE"] if ENV["SECRET_KEY_BASE"].present?
+  if ENV["SECRET_KEY_BASE"].present?
+    config.secret_key_base = ENV["SECRET_KEY_BASE"]
+  elsif ENV["RAILS_MASTER_KEY"].blank? && File.exist?("config/master.key")
+    # Use master.key file if available
+    master_key = File.read("config/master.key").strip
+    config.secret_key_base = master_key if master_key.present?
+  end
 
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }

@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
+# This script runs database migrations on Railway deployments
 # Enable jemalloc for reduced memory usage and latency.
 if [ -z "${LD_PRELOAD+x}" ]; then
     LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
@@ -23,12 +24,12 @@ wait_for_postgres() {
   echo "Attempting to connect to PostgreSQL at $DB_HOST:$DB_PORT..."
   
   # Wait for the PostgreSQL server to be available
-  for i in {1..30}; do
+  for i in {1..60}; do
     if pg_isready -h "$DB_HOST" -p "$DB_PORT" >/dev/null 2>&1; then
       echo "PostgreSQL is available"
       return 0
     fi
-    echo "Waiting for PostgreSQL... attempt $i of 30"
+    echo "Waiting for PostgreSQL... attempt $i of 60"
     sleep 1
   done
   
@@ -36,26 +37,26 @@ wait_for_postgres() {
   return 1
 }
 
-# If running the rails server then create or migrate existing database
-if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
-  if [[ -n "$DATABASE_URL" && "$DATABASE_URL" == postgres* ]] || [[ -n "$PGHOST" || -n "$DATABASE_HOST" ]]; then
-    wait_for_postgres
-  fi
+# Add DATABASE_URL from environment variables if not set
+if [[ -z "$DATABASE_URL" && -n "$PGHOST" ]]; then
+  # Construct DATABASE_URL from individual parameters
+  DB_HOST="${DATABASE_HOST:-${PGHOST:-localhost}}"
+  DB_PORT="${DATABASE_PORT:-${PGPORT:-5432}}"
+  DB_NAME="${DATABASE_NAME:-${PGDATABASE:-sample_app_production}}"
+  DB_USER="${DATABASE_USERNAME:-${PGUSER:-postgres}}"
+  DB_PASS="${DATABASE_PASSWORD:-${PGPASSWORD:-}}"
   
-  # Add DATABASE_URL from environment variables if not set
-  if [[ -z "$DATABASE_URL" && -n "$PGHOST" ]]; then
-    # Construct DATABASE_URL from individual parameters
-    DB_HOST="${DATABASE_HOST:-${PGHOST:-localhost}}"
-    DB_PORT="${DATABASE_PORT:-${PGPORT:-5432}}"
-    DB_NAME="${DATABASE_NAME:-${PGDATABASE:-sample_app_production}}"
-    DB_USER="${DATABASE_USERNAME:-${PGUSER:-postgres}}"
-    DB_PASS="${DATABASE_PASSWORD:-${PGPASSWORD:-}}"
-    
-    export DATABASE_URL="postgres://$DB_USER:$DB_PASS@$DB_HOST:$DB_PORT/$DB_NAME"
-    echo "Constructed DATABASE_URL from environment variables"
-  fi
-  
-  ./bin/rails db:prepare
+  export DATABASE_URL="postgres://$DB_USER:$DB_PASS@$DB_HOST:$DB_PORT/$DB_NAME"
+  echo "Constructed DATABASE_URL from environment variables"
 fi
 
-exec "${@}"
+# Wait for PostgreSQL
+wait_for_postgres
+
+# Run database migrations
+echo "Running database migrations..."
+./bin/rails db:migrate
+
+# Exit with success
+echo "Database migrations completed successfully!"
+exit 0
