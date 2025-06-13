@@ -1,0 +1,45 @@
+<div class="user-summary d-flex align-items-center <%= local_assigns[:css_class] %>">
+  <!-- User Avatar (smaller version) -->
+  <div class="avatar-sm me-3">
+    <%= gravatar_for user, size: 80, class: "rounded-circle img-fluid" %>
+  </div>
+  
+  <!-- User Info -->
+  <div class="user-info flex-grow-1">
+    <div class="user-name">
+      <%= link_to user.name, user_path(user), 
+                  class: "fw-semibold text-decoration-none text-dark" %>
+    </div>
+    <div class="user-email text-muted small">
+      <%= user.email %>
+    </div>
+  </div>
+  
+  <!-- Optional Action Button -->
+  <% if local_assigns[:show_action] %>
+    <div class="user-action">
+      <%= link_to "View", user_path(user), 
+                  class: "btn btn-sm btn-outline-primary" %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .user-summary {
+    padding: 0.75rem;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .user-summary:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .user-summary .user-name a:hover {
+    color: #3498db !important;
+  }
+  
+  .avatar-sm {
+    flex-shrink: 0;
+  }
+</style>

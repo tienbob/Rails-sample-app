@@ -1,0 +1,128 @@
+<% provide(:title, 'Edit Profile') %>
+<% content_for :head do %>
+  <%= stylesheet_link_tag 'users_signup', 'data-turbo-track': 'reload' %>
+  <%= javascript_include_tag 'users_signup', 'data-turbo-track': 'reload', defer: true %>
+<% end %>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <!-- Edit Profile Header -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-warning text-dark text-center">
+          <h2 class="mb-0">
+            <i class="fas fa-edit me-2"></i>
+            Edit Your Profile
+          </h2>
+          <p class="mb-0 mt-2 opacity-75">Update your account information</p>
+        </div>
+        
+        <div class="card-body p-4">
+          <%= form_with(model: @user, local: true, html: { class: "needs-validation", novalidate: true }) do |f| %>
+            
+            <!-- Error Messages -->
+            <%= render 'shared/error_messages', object: @user %>
+
+            <!-- Gravatar -->
+            <div class="text-center mb-4">
+              <%= gravatar_for @user, size: 100, class: "rounded-circle shadow" %>
+              <p class="small text-muted mt-2">
+                <i class="fas fa-info-circle me-1"></i>
+                Change your avatar at 
+                <%= link_to "gravatar.com", "https://gravatar.com/emails", 
+                    target: "_blank", class: "text-decoration-none" %>
+              </p>
+            </div>
+
+            <!-- Name Field -->
+            <div class="mb-3">
+              <%= f.label :name, class: "form-label fw-semibold" do %>
+                <i class="fas fa-user me-2 text-muted"></i>Full Name
+              <% end %>
+              <%= f.text_field :name, 
+                  class: "form-control #{'is-invalid' if @user.errors[:name].any?}",
+                  placeholder: "Enter your full name",
+                  required: true,
+                  maxlength: 50 %>
+              <% if @user.errors[:name].any? %>
+                <div class="invalid-feedback">
+                  <%= @user.errors[:name].first %>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Email Field -->
+            <div class="mb-3">
+              <%= f.label :email, class: "form-label fw-semibold" do %>
+                <i class="fas fa-envelope me-2 text-muted"></i>Email Address
+              <% end %>
+              <%= f.email_field :email, 
+                  class: "form-control #{'is-invalid' if @user.errors[:email].any?}",
+                  placeholder: "Enter your email address",
+                  required: true,
+                  maxlength: 255 %>
+              <% if @user.errors[:email].any? %>
+                <div class="invalid-feedback">
+                  <%= @user.errors[:email].first %>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Password Field -->
+            <div class="mb-3">
+              <%= f.label :password, class: "form-label fw-semibold" do %>
+                <i class="fas fa-lock me-2 text-muted"></i>New Password
+              <% end %>
+              <%= f.password_field :password, 
+                  class: "form-control #{'is-invalid' if @user.errors[:password].any?}",
+                  placeholder: "Leave blank to keep current password",
+                  minlength: 6 %>
+              <% if @user.errors[:password].any? %>
+                <div class="invalid-feedback">
+                  <%= @user.errors[:password].first %>
+                </div>
+              <% else %>
+                <div class="form-text">
+                  <i class="fas fa-info-circle me-1"></i>
+                  Leave blank if you don't want to change your password
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Password Confirmation Field -->
+            <div class="mb-4">
+              <%= f.label :password_confirmation, class: "form-label fw-semibold" do %>
+                <i class="fas fa-lock me-2 text-muted"></i>Confirm New Password
+              <% end %>
+              <%= f.password_field :password_confirmation, 
+                  class: "form-control #{'is-invalid' if @user.errors[:password_confirmation].any?}",
+                  placeholder: "Confirm your new password" %>
+              <% if @user.errors[:password_confirmation].any? %>
+                <div class="invalid-feedback">
+                  <%= @user.errors[:password_confirmation].first %>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid mb-3">
+              <%= f.submit "Update Profile", class: "btn btn-warning btn-lg text-dark fw-semibold" %>
+            </div>
+
+            <!-- Action Links -->
+            <div class="text-center">
+              <%= link_to "View Profile", @user, class: "btn btn-outline-primary me-2" %>
+              <%= link_to "Cancel", @user, class: "btn btn-outline-secondary" %>
+            </div>
+
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Back to Profile -->
+      <div class="text-center mt-2">
+        <%= link_to "← Back to Profile", @user, class: "btn btn-link text-muted" %>
+      </div>
+    </div>
+  </div>
+</div>

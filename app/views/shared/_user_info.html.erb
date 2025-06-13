@@ -1,0 +1,91 @@
+<div class="user-info">
+  <div class="row align-items-center">
+    <div class="col-md-3 text-center">
+      <!-- Avatar placeholder using Gravatar or default -->
+      <div class="avatar-container mb-3">
+        <%= gravatar_for user, size: 80, class: "rounded-circle img-fluid" %>
+      </div>
+    </div>
+    
+    <div class="col-md-9">
+      <div class="user-details">
+        <!-- User Name -->
+        <h3 class="mb-2">
+          <%= user.name %>
+          <span class="badge bg-success ms-2">Active</span>
+        </h3>
+        
+        <!-- User Email -->
+        <p class="text-muted mb-3">
+          <i class="fas fa-envelope me-2"></i>
+          <%= user.email %>
+        </p>
+        
+        <!-- User ID and Join Date -->
+        <div class="row">
+          <div class="col-sm-6">
+            <small class="text-muted">
+              <i class="fas fa-id-card me-1"></i>
+              <strong>User ID:</strong> #<%= user.id %>
+            </small>
+          </div>
+          <div class="col-sm-6">
+            <small class="text-muted">
+              <i class="fas fa-calendar-alt me-1"></i>
+              <strong>Joined:</strong> <%= user.created_at.strftime("%b %d, %Y") %>
+            </small>
+          </div>
+        </div>
+        
+        <!-- Additional Info -->
+        <div class="mt-3">
+          <span class="badge bg-light text-dark me-2">
+            <i class="fas fa-clock me-1"></i>
+            Last updated: <%= time_ago_in_words(user.updated_at) %> ago
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .user-info {
+    padding: 1rem 0;
+  }
+  
+  .avatar-container {
+    position: relative;
+  }
+  
+  .stat-item {
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    margin-bottom: 1rem;
+  }
+  
+  .stat-item h5 {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .user-details h3 {
+    color: #2c3e50;
+    font-weight: 600;
+  }
+  
+  .badge {
+    font-size: 0.75rem;
+  }
+  
+  @media (max-width: 768px) {
+    .user-info .row {
+      text-align: center;
+    }
+    
+    .user-info .col-md-9 {
+      margin-top: 1rem;
+    }
+  }
+</style>

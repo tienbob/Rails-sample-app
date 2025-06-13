@@ -1,0 +1,23 @@
+<footer class="bg-dark text-light mt-auto py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <p class="mb-1">&copy; <%= Date.current.year %> Sample App</p>
+        <p class="mb-0">Built with Ruby on Rails</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item">
+            <%= link_to "About", about_path, class: "text-light text-decoration-none" %>
+          </li>
+          <li class="list-inline-item">
+            <%= link_to "Help", help_path, class: "text-light text-decoration-none" %>
+          </li>
+          <li class="list-inline-item">
+            <%= link_to "Contact", '#', class: "text-light text-decoration-none" %>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>

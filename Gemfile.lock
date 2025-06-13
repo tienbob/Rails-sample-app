@@ -76,6 +76,7 @@ GEM
       public_suffix (>= 2.0.2, < 7.0)
     ansi (1.5.0)
     base64 (0.3.0)
+    bcrypt (3.1.20)
     benchmark (0.4.1)
     bigdecimal (3.2.2)
     bindex (0.8.1)
@@ -104,6 +105,7 @@ GEM
     erubi (1.13.1)
     ffi (1.17.2-x86-mingw32)
     ffi (1.17.2-x86_64-linux-gnu)
+    fiddle (1.1.8)
     formatador (1.1.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -185,6 +187,11 @@ GEM
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
+    propshaft (1.1.0)
+      actionpack (>= 7.0.0)
+      activesupport (>= 7.0.0)
+      rack
+      railties (>= 7.0.0)
     pry (0.15.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -217,6 +224,10 @@ GEM
       activesupport (= 8.0.2)
       bundler (>= 1.15.0)
       railties (= 8.0.2)
+    rails-controller-testing (1.0.5)
+      actionpack (>= 5.0.1.rc1)
+      actionview (>= 5.0.1.rc1)
+      activesupport (>= 5.0.1.rc1)
     rails-dom-testing (2.3.0)
       activesupport (>= 5.0.0)
       minitest
@@ -311,9 +322,11 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  bcrypt (~> 3.1)
   bootsnap (~> 1.16)
   capybara
   debug
+  fiddle (~> 1.1.0)
   guard
   guard-minitest
   importmap-rails (~> 1.1)
@@ -321,11 +334,12 @@ DEPENDENCIES
   minitest
   minitest-reporters
   pg (~> 1.3)
+  propshaft
   puma (~> 6.0)
   rails (~> 8.0.2)
+  rails-controller-testing
   sassc-rails (~> 2.1)
   selenium-webdriver
-  sprockets-rails (~> 3.4)
   sqlite3 (~> 2.1)
   stimulus-rails (~> 1.2)
   turbo-rails (~> 1.4)

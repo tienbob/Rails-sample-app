@@ -1,0 +1,72 @@
+<div class="card user-card h-100 shadow-sm">
+  <div class="card-body text-center">
+    <!-- User Avatar -->
+    <div class="avatar-wrapper mb-3">
+      <%= gravatar_for user, size: 80, class: "rounded-circle img-fluid" %>
+    </div>
+    
+    <!-- User Name -->
+    <h5 class="card-title mb-2">
+      <%= link_to user.name, user_path(user), class: "text-decoration-none" %>
+    </h5>
+    
+    <!-- User Email -->
+    <p class="card-text text-muted small mb-3">
+      <i class="fas fa-envelope me-1"></i>
+      <%= truncate(user.email, length: 25) %>
+    </p>
+    
+    <!-- User Info -->
+    <div class="user-meta mb-3">
+      <small class="text-muted d-block">
+        <i class="fas fa-calendar-alt me-1"></i>
+        Joined <%= user.created_at.strftime("%b %Y") %>
+      </small>
+      <small class="text-muted d-block mt-1">
+        <i class="fas fa-clock me-1"></i>
+        Active <%= time_ago_in_words(user.updated_at) %> ago
+      </small>
+    </div>
+    
+    <!-- Action Button -->
+    <div class="card-actions">
+      <%= link_to "View Profile", user_path(user), 
+                  class: "btn btn-outline-primary btn-sm" %>
+    </div>
+  </div>
+</div>
+
+<style>
+  .user-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid #e9ecef;
+  }
+  
+  .user-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .user-card .card-title a {
+    color: #2c3e50;
+    font-weight: 600;
+  }
+  
+  .user-card .card-title a:hover {
+    color: #3498db;
+  }
+  
+  .avatar-wrapper {
+    position: relative;
+  }
+  
+  .user-meta {
+    border-top: 1px solid #f8f9fa;
+    border-bottom: 1px solid #f8f9fa;
+    padding: 0.75rem 0;
+  }
+  
+  .card-actions {
+    margin-top: auto;
+  }
+</style>

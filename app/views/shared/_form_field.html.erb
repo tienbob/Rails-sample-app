@@ -1,0 +1,21 @@
+<div class="mb-3">
+  <%= label_tag "#{object_name}_#{field}", label_text, class: "form-label fw-semibold" do %>
+    <% if local_assigns[:icon] %>
+      <i class="fas fa-<%= icon %> me-2 text-muted"></i>
+    <% end %>
+    <%= label_text %>
+  <% end %>
+  
+  <%= yield %>
+  
+  <!-- Field-specific error messages -->
+  <%= render 'shared/field_error', object: object, field: field %>
+  
+  <!-- Optional help text -->
+  <% if local_assigns[:help_text] %>
+    <div class="form-text">
+      <i class="fas fa-info-circle me-1"></i>
+      <%= help_text %>
+    </div>
+  <% end %>
+</div>
