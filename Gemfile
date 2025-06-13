@@ -16,6 +16,7 @@ gem "puma",            "~> 6.0"
 gem "bootsnap",        "~> 1.16", require: false
 gem "fiddle", "~> 1.1.0"
 gem "rails-controller-testing"
+gem "thruster", require: false
 group :development, :test do
   gem "sqlite3", "~> 2.1"
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
