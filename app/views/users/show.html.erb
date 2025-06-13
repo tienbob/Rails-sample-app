@@ -46,10 +46,12 @@
             </div>
           </div>
         </div>
-      </div>      <!-- Action Buttons -->
+      </div>      
+      <!-- Action Buttons -->
       <div class="mt-4 text-center">
         <%= link_to "Edit Profile", edit_user_path(@user), class: "btn btn-primary me-2" %>
         <%= link_to "All Users", users_path, class: "btn btn-outline-secondary" %>
+        <%= link_to "Logout", logout_path, class: "btn btn-outline-danger"%>
       </div>
     </div>
   </div>
