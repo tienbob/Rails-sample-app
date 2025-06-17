@@ -3,7 +3,7 @@ source "https://rubygems.org"
 # Specify bundler version for compatibility with Railway
 gem "bundler", "2.6.9"
 
-gem "rails", "~> 8.0.2"
+gem "rails", "~> 7.1.0"
 gem "tzinfo-data"
 gem "sassc-rails",     "~> 2.1"
 gem "sprockets-rails", "~> 3.5"
@@ -17,6 +17,8 @@ gem "bootsnap",        "~> 1.16", require: false
 gem "fiddle", "~> 1.1.0"
 gem "rails-controller-testing"
 gem "thruster", require: false
+gem "will_paginate",           "~> 4.0"
+gem "bootstrap-will_paginate", "~> 1.0"
 group :development, :test do
   gem "sqlite3", "~> 2.1"
   gem "debug", platforms: %i[ mri mingw x64_mingw ]

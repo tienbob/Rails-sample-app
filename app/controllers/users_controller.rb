@@ -1,8 +1,11 @@
 class UsersController < ApplicationController
+  before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy]
+  before_action :correct_user,   only: [:show, :edit, :update]
+  before_action :admin_user,     only: :destroy
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def index
-    @users = User.all
+    @users = User.where(activated: true).paginate(page: params[:page])
   end
 
   def new
@@ -12,14 +15,16 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      log_in @user
-      redirect_to @user, notice: 'Welcome to the Sample App!'
+      @user.send_activation_email
+      flash[:info] = "Please check your email to activate your account."
+      redirect_to root_url
     else
       render :new, status: :unprocessable_entity
     end
   end
 
   def show
+    redirect_to root_url and return unless @user.activated?
   end
 
   def edit
@@ -27,32 +32,56 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params_for_update)
-      redirect_to @user, notice: 'Profile was successfully updated.'
+      flash[:success] = "Profile updated"
+      redirect_to @user
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @user.destroy
-    redirect_to users_url, notice: 'User was successfully deleted.'
+    User.find(params[:id]).destroy
+    flash[:success] = "User deleted"
+    redirect_to users_url, status: :see_other
   end
 
   private
 
-  def set_user
-    @user = User.find(params[:id])
-  end
+    def set_user
+      @user = User.find(params[:id])
+    end
 
-  def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
-  end
-
-  def user_params_for_update
-    if params[:user][:password].blank?
-      params.require(:user).permit(:name, :email)
-    else
+    def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
-  end
+
+    def user_params_for_update
+      if params[:user][:password].blank?
+        params.require(:user).permit(:name, :email)
+      else
+        params.require(:user).permit(:name, :email, :password, :password_confirmation)
+      end
+    end
+
+    # Before filters
+
+    # Confirms a logged-in user.
+    def logged_in_user
+      unless logged_in?
+        store_location
+        flash[:danger] = "Please log in."
+        redirect_to login_url, status: :see_other
+      end
+    end
+
+    # Confirms the correct user.
+    def correct_user
+      @user = User.find(params[:id])
+      redirect_to(root_url, status: :see_other) unless current_user?(@user)
+    end
+
+    # Confirms an admin user.
+    def admin_user
+      redirect_to(root_url, status: :see_other) unless current_user.admin?
+    end
 end
