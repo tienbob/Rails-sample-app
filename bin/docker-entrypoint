@@ -44,11 +44,24 @@ wait_for_postgres() {
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   if [[ -n "$DATABASE_URL" ]]; then
+    echo "Setting up database..."
     wait_for_postgres
-    ./bin/rails db:prepare
+    
+    # Run database setup/migration
+    echo "Running database migrations..."
+    ./bin/rails db:create 2>/dev/null || echo "Database already exists"
+    ./bin/rails db:migrate
+    
+    # Create sample users if in development/demo mode
+    if [[ "$RAILS_ENV" != "production" ]] || [[ "$CREATE_SAMPLE_DATA" == "true" ]]; then
+      echo "Creating sample data..."
+      ./bin/rails db:seed 2>/dev/null || echo "Sample data creation skipped or failed"
+    fi
+    
+    echo "Database setup complete"
+  else
+    echo "Warning: DATABASE_URL not set, skipping database setup"
   fi
 fi
-
-exec "${@}"
 
 exec "${@}"

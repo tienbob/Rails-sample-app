@@ -1,9 +1,59 @@
 # This file should ensure the existence of records required to run the application in every environment (production,
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+
+# Create sample users for development/testing
+unless Rails.env.production?
+  puts "Creating sample users..."
+  
+  # Create main example user
+  user = User.find_or_create_by!(email: "example@railstutorial.org") do |u|
+    u.name = "Example User"
+    u.password = "foobar"
+    u.password_confirmation = "foobar"
+    u.activated = true
+    u.activated_at = Time.zone.now
+  end
+  
+  # Create additional users
+  99.times do |n|
+    name = "User #{n+1}"
+    email = "example-#{n+1}@railstutorial.org"
+    password = "password"
+    
+    User.find_or_create_by!(email: email) do |u|
+      u.name = name
+      u.password = password
+      u.password_confirmation = password
+      u.activated = true
+      u.activated_at = Time.zone.now
+    end
+  end
+  
+  puts "Sample users created!"
+  
+  # Create sample microposts
+  puts "Creating sample microposts..."
+  users = User.order(:created_at).take(6)
+  sample_posts = [
+    "Hello world! This is my first micropost.",
+    "Ruby on Rails is awesome!",
+    "Learning web development one step at a time.",
+    "Beautiful day for coding!",
+    "Just deployed my app to production.",
+    "Coffee and code - perfect combination.",
+    "Working on some exciting features.",
+    "Love the Rails community!",
+    "Building something amazing.",
+    "Another productive day!"
+  ]
+  
+  10.times do |i|
+    content = sample_posts[i % sample_posts.length]
+    users.each { |user| user.microposts.create!(content: "#{content} ##{i+1}") }
+  end
+  
+  puts "Sample microposts created!"
+end
+
+puts "Seeding complete!"
