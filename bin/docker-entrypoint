@@ -43,8 +43,14 @@ wait_for_postgres() {
 
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+  echo "Starting Rails server setup..."
+  echo "DATABASE_URL is set: $([ -n "$DATABASE_URL" ] && echo "YES" || echo "NO")"
+  echo "DATABASE_URL length: ${#DATABASE_URL}"
+  
   if [[ -n "$DATABASE_URL" ]]; then
     echo "Setting up database..."
+    # Print first and last 20 characters of DATABASE_URL for debugging (without exposing full credentials)
+    echo "DATABASE_URL preview: ${DATABASE_URL:0:20}...${DATABASE_URL: -20}"
     wait_for_postgres
     
     # Run database setup/migration
