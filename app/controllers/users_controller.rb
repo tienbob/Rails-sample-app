@@ -22,9 +22,14 @@ class UsersController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
-
   def show
-    redirect_to root_url and return unless @user.activated?
+    @user = User.find(params[:id])
+    # Ensure the user is activated before showing their profile
+    @microposts = @user.microposts.paginate(page: params[:page], per_page: 3)
+    unless @user.activated?
+      flash[:warning] = "Account not activated. Please check your email."
+      redirect_to root_url, status: :see_other
+    end
   end
 
   def edit
@@ -63,17 +68,6 @@ class UsersController < ApplicationController
         params.require(:user).permit(:name, :email)
       else
         params.require(:user).permit(:name, :email, :password, :password_confirmation)
-      end
-    end
-
-    # Before filters
-
-    # Confirms a logged-in user.
-    def logged_in_user
-      unless logged_in?
-        store_location
-        flash[:danger] = "Please log in."
-        redirect_to login_url, status: :see_other
       end
     end
 

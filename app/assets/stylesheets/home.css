@@ -1,0 +1,100 @@
+/* Home Page Styles */
+.feed-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.feed-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.feed-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.feed-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.feed-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Micropost Form Styles */
+.micropost-form textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.micropost-form textarea:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Character counter styling */
+#character-count {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+/* User profile card */
+.card .gravatar {
+  transition: transform 0.2s ease-in-out;
+}
+
+.card .gravatar:hover {
+  transform: scale(1.05);
+}
+
+/* Feed styling */
+.card .card-body.p-0 .card {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.card .card-body.p-0 .card:not(:last-child) {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.card .card-body.p-0 .card:hover {
+  background-color: #f8f9fa;
+  transform: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .feed-container {
+    max-height: 400px;
+  }
+  
+  .col-md-4 {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Button animations */
+.btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Empty feed state */
+.fa-comments {
+  opacity: 0.6;
+}
+
+/* Sidebar styling */
+@media (min-width: 768px) {
+  .col-md-4 {
+    position: sticky;
+    top: 1rem;
+    height: fit-content;
+  }
+}

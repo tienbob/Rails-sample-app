@@ -8,6 +8,7 @@ gem "tzinfo-data"
 gem "sassc-rails",     "~> 2.1"
 gem "sprockets-rails", "~> 3.5"
 gem "bcrypt",        "~> 3.1"
+gem "will_paginate", "~> 4.0"
 gem "importmap-rails", "~> 1.1"
 gem "turbo-rails",     "~> 1.4"
 gem "stimulus-rails",  "~> 1.2"
@@ -16,6 +17,7 @@ gem "puma",            "~> 6.0"
 gem "bootsnap",        "~> 1.16", require: false
 gem "fiddle", "~> 1.1.0"
 gem "rails-controller-testing"
+gem "pry"
 gem "thruster", require: false
 group :development, :test do
   gem "sqlite3", "~> 2.1"

@@ -10,7 +10,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   test "should create session" do
     user = users(:michael)
     post login_path, params: { session: { email: user.email, password: 'password' } }
-    assert_redirected_to user
+    assert_redirected_to root_url
     assert is_logged_in?
   end
 

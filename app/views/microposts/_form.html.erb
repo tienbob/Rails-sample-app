@@ -1,0 +1,51 @@
+<%= form_with(model: micropost, local: true, class: "d-flex flex-column") do |form| %>
+  <% if micropost.errors.any? %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <h6 class="alert-heading">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <%= pluralize(micropost.errors.count, "error") %> prohibited this micropost from being saved:
+      </h6>
+      <ul class="mb-0">
+        <% micropost.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :content, class: "form-label fw-bold" %>
+    <%= form.text_area :content, class: "form-control", rows: 3, 
+        placeholder: "What's on your mind?" %>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center">
+    <small class="text-muted">
+      <span id="character-count">0</span>/140 characters
+    </small>
+    <%= form.submit "Post Micropost", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const textArea = document.querySelector('#micropost_content');
+  const charCount = document.querySelector('#character-count');
+  
+  if (textArea && charCount) {
+    textArea.addEventListener('input', function() {
+      const count = this.value.length;
+      charCount.textContent = count;
+      
+      if (count > 140) {
+        charCount.classList.add('text-danger');
+        charCount.classList.remove('text-muted');
+      } else {
+        charCount.classList.add('text-muted');
+        charCount.classList.remove('text-danger');
+      }
+    });
+  }
+});
+</script>

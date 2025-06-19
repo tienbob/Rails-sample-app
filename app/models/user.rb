@@ -5,11 +5,16 @@ class User < ApplicationRecord
   # attr_accessor creates getter/setter methods for remember_token
   # This is NOT stored in database - it's temporary, only in memory
   # Used to hold the plain-text token before we hash it
-  attr_accessor :remember_token
+  attr_accessor :remember_token, :activation_token, :reset_token
+
+  # Link user to micropost
+  # one to many relationship
+  has_many :microposts, dependent: :destroy
 
   # RAILS CALLBACK: This runs automatically before every save
   # Ensures all emails are stored in lowercase for consistency
   before_save { self.email = email.downcase }
+  before_create :create_activation_digest
 
   # RAILS VALIDATIONS: These run before saving and stop save if they fail
   validates :name, presence: true, length: { maximum: 50 }
@@ -56,6 +61,13 @@ class User < ApplicationRecord
     SecureRandom.urlsafe_base64
   end
 
+
+  def feed
+        Micropost.where("user_id = ?",id)
+  end
+  # user_id = ?" the "?" ensures that id is properly escaped before being included in the underlying SQL query,
+  # thereby avoiding a serious security hole called SQL injection
+
   # INSTANCE METHODS (called on specific User objects)
   
   # "Remember" a user by creating a remember token and storing its digest
@@ -87,6 +99,41 @@ class User < ApplicationRecord
     update_attribute(:remember_digest, nil)
   end
 
+  # Activates an account.
+  def activate
+    update_columns(activated: true, activated_at: Time.zone.now)
+  end
+
+  # Sends activation email.
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
+  end
+
+  # Sets the password reset attributes.
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_columns(reset_digest: User.digest(reset_token), reset_sent_at: Time.zone.now)
+  end
+
+  # Sends password reset email.
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
+
+  # Returns true if a password reset has expired.
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago
+  end
+  # Returns true if the given token matches the digest.
+  def activated?
+    activated
+  end
+  # Defines a proto-feed.
+  # Returns all microposts from all users for the global feed.
+  def feed
+    Micropost.all
+  end
+
   private
 
   # CUSTOM VALIDATION METHODS
@@ -104,5 +151,11 @@ class User < ApplicationRecord
     if password.present? && password != password_confirmation
       errors.add(:password_confirmation, "doesn't match password")
     end
+  end
+
+  # Creates and assigns the activation token and digest.
+  def create_activation_digest
+    self.activation_token = User.new_token
+    self.activation_digest = User.digest(activation_token)
   end
 end

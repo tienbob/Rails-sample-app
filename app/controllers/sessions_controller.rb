@@ -14,8 +14,7 @@ class SessionsController < ApplicationController
     # Find user by email (params comes from the form submission)
     # params[:session][:email] comes from form field name="session[email]"
     user = User.find_by(email: params[:session][:email].downcase)
-    
-    # Authenticate: user exists AND password matches
+      # Authenticate: user exists AND password matches
     # user.authenticate comes from has_secure_password in User model
     if user && user.authenticate(params[:session][:password])
       # Security: Clear any existing session data to prevent session fixation
@@ -24,7 +23,7 @@ class SessionsController < ApplicationController
       # These methods are defined in SessionsHelper
       log_in user              # Store user_id in session
       remember_user(user)      # Set persistent cookies for "remember me"
-      redirect_to user, notice: 'Logged in successfully.'
+      redirect_back_or(root_url)
     else
       # flash.now makes flash message available only for this render
       # (regular flash would persist to next request)

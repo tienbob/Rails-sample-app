@@ -9,7 +9,7 @@ module SessionsHelper
     session[:user_id] = user.id
     # Guard against session replay attacks.
     # See https://bit.ly/33UvK0w for more.
-    session[:session_token] = user.session_token
+    session[:session_token] = user.id
   end
 
   # Remembers a user in a persistent session.
@@ -84,5 +84,16 @@ module SessionsHelper
     # Delete the cookies
     cookies.delete(:user_id)
     cookies.delete(:remember_token)
+  end
+
+  # Stores the URL trying to be accessed.
+  def store_location
+    session[:forwarding_url] = request.original_url if request.get?
+  end
+
+  # Redirects to stored location (or to the default).
+  def redirect_back_or(default)
+    redirect_to(session[:forwarding_url] || default, status: :see_other)
+    session.delete(:forwarding_url)
   end
 end

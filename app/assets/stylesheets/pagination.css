@@ -1,0 +1,200 @@
+/* Custom Pagination Styling */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 1rem 0;
+}
+
+.pagination a,
+.pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.5rem 0.75rem;
+  margin: 0 0.125rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  color: #6c757d;
+  transition: all 0.2s ease-in-out;
+}
+
+.pagination a:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+  color: #495057;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.pagination .current {
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+  color: #fff !important;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
+}
+
+.pagination .current:hover {
+  background-color: #0b5ed7 !important;
+  border-color: #0a58ca !important;
+  transform: none;
+}
+
+.pagination .disabled {
+  background-color: #f8f9fa !important;
+  border-color: #dee2e6 !important;
+  color: #adb5bd !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.pagination .disabled:hover {
+  background-color: #f8f9fa !important;
+  border-color: #dee2e6 !important;
+  color: #adb5bd !important;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Previous/Next button styling */
+.pagination .prev_page,
+.pagination .next_page {
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  min-width: auto;
+}
+
+.pagination .prev_page:before {
+  content: "‹ ";
+  font-size: 1.1em;
+}
+
+.pagination .next_page:after {
+  content: " ›";
+  font-size: 1.1em;
+}
+
+/* Gap styling for ... */
+.pagination .gap {
+  background: transparent !important;
+  border: none !important;
+  color: #6c757d !important;
+  cursor: default;
+  font-weight: bold;
+}
+
+.pagination .gap:hover {
+  background: transparent !important;
+  border: none !important;
+  color: #6c757d !important;
+  transform: none;
+  box-shadow: none;
+}
+
+/* First/Last page styling */
+.pagination .first,
+.pagination .last {
+  font-weight: 600;
+  border-radius: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .pagination {
+    gap: 0.125rem;
+  }
+  
+  .pagination a,
+  .pagination span {
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    margin: 0 0.0625rem;
+  }
+  
+  .pagination .prev_page,
+  .pagination .next_page {
+    padding: 0.25rem 0.75rem;
+  }
+}
+
+/* Alternative compact style */
+.pagination.pagination-sm {
+  gap: 0.125rem;
+}
+
+.pagination.pagination-sm a,
+.pagination.pagination-sm span {
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+/* Loading animation for pagination */
+.pagination-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.pagination-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1rem;
+  height: 1rem;
+  margin: -0.5rem 0 0 -0.5rem;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #0d6efd;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Card footer with pagination */
+.card-footer.pagination-footer {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-top: 1px solid #dee2e6;
+  padding: 0.75rem 1.25rem;
+}
+
+.card-footer.pagination-footer .pagination {
+  margin: 0;
+  padding: 0;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .pagination a,
+  .pagination span {
+    background-color: #343a40;
+    border-color: #495057;
+    color: #adb5bd;
+  }
+  
+  .pagination a:hover {
+    background-color: #495057;
+    border-color: #6c757d;
+    color: #f8f9fa;
+  }
+  
+  .card-footer.pagination-footer {
+    background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+    border-top-color: #495057;
+  }
+}

@@ -44,9 +44,59 @@
                 <p class="h6"><%= time_ago_in_words(@user.updated_at) %> ago</p>
               </div>
             </div>
+          </div>        </div>      </div>
+
+      <!-- Micropost Form (only show for current user) -->
+      <% if current_user?(@user) %>
+        <div class="card shadow-sm mt-4">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <i class="fas fa-edit me-2"></i>
+              Create New Micropost
+            </h5>
+          </div>
+          <div class="card-body">
+            <%= render 'microposts/form', micropost: current_user.microposts.build %>
           </div>
         </div>
-      </div>        <!-- Action Buttons -->
+      <% end %>
+
+      <!-- Microposts Section -->
+      <% if @microposts.any? %>
+        <div class="card shadow-sm mt-4">
+          <div class="card-header">
+            <h4 class="mb-0">
+              <i class="fas fa-comments me-2"></i>
+              Microposts (<%= @user.microposts.count %>)
+            </h4>
+          </div>
+          <div class="card-body p-0">            <div class="microposts-container">
+              <%= render @microposts %>
+            </div>            <!-- Pagination -->
+            <% if @microposts.total_pages > 1 %>
+              <div class="card-footer pagination-footer">
+                <%= enhanced_paginate @microposts %>
+                <%= pagination_info @microposts %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <div class="card shadow-sm mt-4">
+          <div class="card-header">
+            <h4 class="mb-0">
+              <i class="fas fa-comments me-2"></i>
+              Microposts
+            </h4>
+          </div>
+          <div class="card-body text-center py-5">
+            <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+            <p class="text-muted">No microposts yet.</p>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Action Buttons -->
       <div class="mt-4 text-center">
         <%= link_to "Edit Profile", edit_user_path(@user), class: "btn btn-primary me-2" %>
         <%= link_to "All Users", users_path, class: "btn btn-outline-secondary" %>

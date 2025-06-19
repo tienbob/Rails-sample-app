@@ -1,0 +1,43 @@
+<div class="card mb-3 shadow-sm" id="micropost-<%= micropost.id %>">
+  <div class="card-body">
+    <div class="d-flex align-items-start">
+      <!-- User Avatar -->
+      <div class="me-3">
+        <%= link_to gravatar_for(micropost.user, size: 50), micropost.user, class: "text-decoration-none" %>
+      </div>
+      
+      <!-- Micropost Content -->
+      <div class="flex-grow-1">        <!-- User Name and Actions -->
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="d-flex align-items-center">
+            <h6 class="mb-0 me-2">
+              <%= link_to micropost.user.name, micropost.user, class: "text-decoration-none fw-bold text-primary" %>
+            </h6>
+            <% if current_user?(micropost.user) %>
+              <span class="badge bg-success bg-opacity-25 text-success">You</span>
+            <% end %>
+          </div>
+          <div class="d-flex align-items-center">
+            <small class="text-muted me-3">
+              <i class="far fa-clock me-1"></i>
+              <%= time_ago_in_words(micropost.created_at) %> ago
+            </small>
+            <% if current_user?(micropost.user) %>
+              <%= link_to micropost, method: :delete, 
+                  data: { turbo_method: :delete, 
+                         confirm: "Are you sure you want to delete this micropost?" },
+                  class: "btn btn-sm btn-outline-danger" do %>
+                <i class="fas fa-trash-alt"></i>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        
+        <!-- Micropost Content -->
+        <div class="micropost-content">
+          <p class="mb-0"><%= simple_format(h(micropost.content)) %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
