@@ -1,0 +1,130 @@
+<% provide(:title, @user.name) %>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <!-- Public Profile Header -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+          <h2 class="mb-0">
+            <i class="fas fa-user me-2"></i>
+            Public Profile
+          </h2>
+        </div>
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-3 text-center">
+              <!-- Avatar -->
+              <div class="avatar-container mb-3">
+                <%= gravatar_for @user, size: 100, class: "rounded-circle img-fluid" %>
+              </div>
+            </div>
+            
+            <div class="col-md-9">
+              <div class="user-details">
+                <!-- User Name -->
+                <h3 class="mb-2">
+                  <%= @user.name %>
+                  <span class="badge bg-info ms-2">Public Profile</span>
+                </h3>
+                
+                <!-- Join Date (Public Info) -->
+                <p class="text-muted mb-3">
+                  <i class="fas fa-calendar-alt me-2"></i>
+                  Joined <%= @user.created_at.strftime("%B %Y") %>
+                </p>
+                
+                <!-- Social Stats -->
+                <div class="row text-center mb-3">
+                  <div class="col-4">
+                    <div class="stat-item">
+                      <h5 class="text-info mb-0"><%= @user.microposts.count %></h5>
+                      <small class="text-muted">Posts</small>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <%= link_to following_user_path(@user), class: "text-decoration-none" do %>
+                      <div class="stat-item">
+                        <h5 class="text-info mb-0"><%= @user.following.count %></h5>
+                        <small class="text-muted">Following</small>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div class="col-4">
+                    <%= link_to followers_user_path(@user), class: "text-decoration-none" do %>
+                      <div class="stat-item">
+                        <h5 class="text-info mb-0"><%= @user.followers.count %></h5>
+                        <small class="text-muted">Followers</small>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+                
+                <!-- Follow/Unfollow Button -->
+                <% if logged_in? && !current_user?(@user) %>
+                  <div class="mb-3">
+                    <%= render 'follow_form', user: @user %>
+                  </div>
+                <% end %>
+                
+                <!-- Public Actions -->
+                <div class="d-flex flex-wrap gap-2">
+                  <% if logged_in? %>
+                    <%= link_to "Back to Home", root_path, class: "btn btn-outline-secondary btn-sm" %>
+                    <%= link_to "All Users", users_path, class: "btn btn-outline-info btn-sm" %>
+                  <% else %>
+                    <%= link_to "Sign Up", signup_path, class: "btn btn-primary btn-sm" %>
+                    <%= link_to "Log In", login_path, class: "btn btn-outline-primary btn-sm" %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Public Posts -->
+      <% if @microposts.any? %>
+        <div class="card shadow-sm mt-4">
+          <div class="card-header">
+            <h4 class="mb-0">
+              <i class="fas fa-comments me-2"></i>
+              Recent Posts (<%= @microposts.total_entries %>)
+            </h4>
+          </div>
+          <div class="card-body p-0">
+            <div class="feed-container">
+              <%= render @microposts %>
+            </div>
+            <% if @microposts.total_pages > 1 %>
+              <div class="card-footer bg-light">
+                <%= enhanced_paginate @microposts %>
+                <div class="text-center mt-2">
+                  <%= pagination_info @microposts %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <div class="card shadow-sm mt-4">
+          <div class="card-body text-center py-5">
+            <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+            <h6 class="text-muted">No posts yet</h6>
+            <p class="text-muted"><%= @user.name %> hasn't shared anything yet.</p>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Information Notice -->
+      <div class="alert alert-info mt-4" role="alert">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Public Profile:</strong> This is a limited view showing only public information. 
+        <% unless logged_in? %>
+          <%= link_to "Sign up", signup_path, class: "alert-link" %> or 
+          <%= link_to "log in", login_path, class: "alert-link" %> to access more features.
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

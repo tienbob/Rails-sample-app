@@ -6,11 +6,15 @@ class User < ApplicationRecord
   # This is NOT stored in database - it's temporary, only in memory
   # Used to hold the plain-text token before we hash it
   attr_accessor :remember_token, :activation_token, :reset_token
-
   # Link user to micropost
   # one to many relationship
   has_many :microposts, dependent: :destroy
 
+  has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
+  has_many :following, through: :active_relationships
+
+  has_many :passive_relationships, class_name: "Relationship", foreign_key: "following_id", dependent: :destroy
+  has_many :followers, through: :passive_relationships
   # RAILS CALLBACK: This runs automatically before every save
   # Ensures all emails are stored in lowercase for consistency
   before_save { self.email = email.downcase }
@@ -63,7 +67,7 @@ class User < ApplicationRecord
 
 
   def feed
-        Micropost.where("user_id = ?",id)
+    Micropost.where("user_id IN (:following_ids) OR user_id = :user_id", following_ids: following_ids, user_id: id)
   end
   # user_id = ?" the "?" ensures that id is properly escaped before being included in the underlying SQL query,
   # thereby avoiding a serious security hole called SQL injection
@@ -127,11 +131,53 @@ class User < ApplicationRecord
   # Returns true if the given token matches the digest.
   def activated?
     activated
-  end
-  # Defines a proto-feed.
-  # Returns all microposts from all users for the global feed.
+  end  # Defines a proto-feed.  # Returns a personalized feed with user's posts, followed users' posts, 
+  # and popular posts from the community
   def feed
-    Micropost.all
+    # Always include user's own posts
+    own_posts = microposts
+    
+    # Include posts from followed users
+    following_ids = "SELECT following_id FROM relationships
+                     WHERE follower_id = :user_id"
+    followed_posts = Micropost.where("user_id IN (#{following_ids})", user_id: id)
+    
+    # Include recent popular posts from the community (not from followed users or self)
+    excluded_user_ids = following.pluck(:id) + [id]
+    community_posts = Micropost.where.not(user_id: excluded_user_ids)
+                              .order(created_at: :desc)
+                              .limit(10)
+    
+    # Combine all posts and order by creation date
+    all_post_ids = (own_posts.pluck(:id) + 
+                   followed_posts.pluck(:id) + 
+                   community_posts.pluck(:id)).uniq
+      Micropost.where(id: all_post_ids).order(created_at: :desc)
+  end
+  
+  # Follows a user
+  def follow(other_user)
+    return if self == other_user || following?(other_user)
+    active_relationships.create(following_id: other_user.id)
+  end
+
+  # Unfollows a user
+  def unfollow(other_user)
+    active_relationships.find_by(following_id: other_user.id)&.destroy
+  end
+
+  # Returns true if the current user is following the other user
+  def following?(other_user)
+    following.include?(other_user)
+  end
+
+  # Legacy methods for backward compatibility
+  def follow_user(user)
+    follow(user)
+  end
+
+  def unfollow_user(user)
+    unfollow(user)
   end
 
   private

@@ -54,9 +54,15 @@
                 <%= render @feed_items %>
               </div>
               <% if @feed_items.total_pages > 1 %>
-                <div class="card-footer pagination-footer">
-                  <%= enhanced_paginate @feed_items %>
-                  <%= pagination_info @feed_items %>
+                <div class="card-footer bg-light border-0 py-3">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="flex-grow-1">
+                      <%= enhanced_paginate @feed_items %>
+                    </div>
+                  </div>
+                  <div class="text-center mt-2">
+                    <%= pagination_info @feed_items %>
+                  </div>
                 </div>
               <% end %>
             <% else %>

@@ -20,3 +20,45 @@ jinshi:
   password_digest: <%= BCrypt::Password.create('password', cost: BCrypt::Engine::MIN_COST) %>
   activated: true
   activated_at: <%= Time.zone.now %>
+
+lana:
+  name: Lana Kane
+  email: lana@example.org
+  password_digest: <%= BCrypt::Password.create('password', cost: BCrypt::Engine::MIN_COST) %>
+  activated: true
+  activated_at: <%= Time.zone.now %>
+
+malory:
+  name: Malory Archer
+  email: malory@example.net
+  password_digest: <%= BCrypt::Password.create('password', cost: BCrypt::Engine::MIN_COST) %>
+  activated: true
+  activated_at: <%= Time.zone.now %>
+
+pam:
+  name: Pam Poovey
+  email: pam@example.com
+  password_digest: <%= BCrypt::Password.create('password', cost: BCrypt::Engine::MIN_COST) %>
+  activated: true
+  activated_at: <%= Time.zone.now %>
+
+cyril:
+  name: Cyril Figgis
+  email: cyril@example.com
+  password_digest: <%= BCrypt::Password.create('password', cost: BCrypt::Engine::MIN_COST) %>
+  activated: true
+  activated_at: <%= Time.zone.now %>
+
+cheryl:
+  name: Cheryl Tunt
+  email: cheryl@example.com
+  password_digest: <%= BCrypt::Password.create('password', cost: BCrypt::Engine::MIN_COST) %>
+  activated: true
+  activated_at: <%= Time.zone.now %>
+
+unactivated:
+  name: Unactivated User
+  email: unactivated@example.com
+  password_digest: <%= BCrypt::Password.create('password', cost: BCrypt::Engine::MIN_COST) %>
+  activated: false
+  activated_at: nil

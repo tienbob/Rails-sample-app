@@ -11,8 +11,13 @@ Rails.application.routes.draw do
   get "/debug_db", to: "static_pages#debug_db"
   delete "/logout", to: "sessions#destroy"
   get '/microposts', to: 'static_pages#home'
-  resources :users
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
   resources :microposts, only: [:create, :destroy]
+  resources :relationships, only: [:create, :destroy]
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
 

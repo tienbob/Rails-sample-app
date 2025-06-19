@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy]
-  before_action :correct_user,   only: [:show, :edit, :update]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :following, :followers]
+  before_action :correct_user,   only: [:edit, :update]
   before_action :admin_user,     only: :destroy
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :public_profile, :following, :followers]
 
   def index
     @users = User.where(activated: true).paginate(page: params[:page])
@@ -11,7 +11,6 @@ class UsersController < ApplicationController
   def new
     @user = User.new
   end
-
   def create
     @user = User.new(user_params)
     if @user.save
@@ -22,13 +21,24 @@ class UsersController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
+
   def show
     @user = User.find(params[:id])
     # Ensure the user is activated before showing their profile
-    @microposts = @user.microposts.paginate(page: params[:page], per_page: 3)
     unless @user.activated?
-      flash[:warning] = "Account not activated. Please check your email."
-      redirect_to root_url, status: :see_other
+      flash[:warning] = "Account not activated."
+      redirect_to root_url, status: :see_other and return
+    end
+    
+    @microposts = @user.microposts.paginate(page: params[:page], per_page: 3)
+    
+    # Determine if this is the user's own profile or someone else's
+    if current_user?(@user)
+      # Show full profile for own profile
+      render :show
+    else
+      # Show public profile for other users
+      render :public_profile
     end
   end
 
@@ -46,17 +56,31 @@ class UsersController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
-
   def destroy
     User.find(params[:id]).destroy
     flash[:success] = "User deleted"
     redirect_to users_url, status: :see_other
   end
 
-  private
+  def following
+    @title = "Following"
+    @user = User.find(params[:id])
+    @users = @user.following.paginate(page: params[:page])
+    render 'show_follow'
+  end
 
-    def set_user
+  def followers
+    @title = "Followers"
+    @user = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  private    def set_user
       @user = User.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = "User not found"
+      redirect_to root_path
     end
 
     def user_params

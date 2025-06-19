@@ -6,7 +6,9 @@
       <i class="fas fa-users me-2"></i>
       All Users
     </h1>
-    <%= link_to "New User", new_user_path, class: "btn btn-primary" %>
+    <% unless logged_in? %>
+      <%= link_to "New User", new_user_path, class: "btn btn-primary" %>
+    <% end %>
   </div>
   
   <!-- Users Grid -->

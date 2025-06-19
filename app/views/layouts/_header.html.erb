@@ -4,9 +4,9 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span class="navbar-toggler-icon"></span>
         </button>        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><%= link_to "Help", help_path, class: "nav-link" %></li>
+          <ul class="navbar-nav ms-auto">            <li class="nav-item"><%= link_to "Help", help_path, class: "nav-link" %></li>
             <% if logged_in? %>
+              <li class="nav-item"><%= link_to "Users", users_path, class: "nav-link" %></li>
               <li class="nav-item"><%= link_to "Profile", current_user, class: "nav-link" %></li>
               <li class="nav-item"><%= link_to "Log out", logout_path, class: "nav-link", method: :delete, data: { turbo_method: :delete } %></li>
             <% else %>

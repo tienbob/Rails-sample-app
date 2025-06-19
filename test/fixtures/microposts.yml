@@ -18,3 +18,45 @@ most_recent:
   content: "Writing a short test"
   created_at: <%= Time.zone.now %>
   user: michael
+
+archer_post_1:
+  content: "Danger zone!"
+  created_at: <%= 1.day.ago %>
+  user: archer
+
+archer_post_2:
+  content: "Do you want ants? Because that's how you get ants!"
+  created_at: <%= 2.days.ago %>
+  user: archer
+
+lana_post_1:
+  content: "Lana. Lana. LANA! What?"
+  created_at: <%= 3.hours.ago %>
+  user: lana
+
+lana_post_2:
+  content: "Ugh, you're such a child."
+  created_at: <%= 1.hour.ago %>
+  user: lana
+
+malory_post_1:
+  content: "I don't understand why we have to work so hard to get people to like us."
+  created_at: <%= 5.hours.ago %>
+  user: malory
+
+pam_post_1:
+  content: "Holy shitsnacks!"
+  created_at: <%= 30.minutes.ago %>
+  user: pam
+
+cyril_post_1:
+  content: "Actually, I have a masters in... oh never mind."
+  created_at: <%= 4.hours.ago %>
+  user: cyril
+
+<% 30.times do |n| %>
+bulk_post_<%= n %>:
+  content: "This is micropost number <%= n + 1 %> for testing pagination"
+  created_at: <%= (n + 1).hours.ago %>
+  user: michael
+<% end %>

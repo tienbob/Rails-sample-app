@@ -1,0 +1,14 @@
+<div id="follow_form_<%= user.id %>" class="d-inline">
+  <% if current_user.following?(user) %>
+    <%= form_with(model: current_user.active_relationships.find_by(following_id: user.id),
+                  html: { method: :delete, class: "d-inline" }) do |form| %>
+      <%= form.submit "Unfollow", class: "btn btn-xs btn-outline-secondary border-0", style: "font-size: 0.75rem; padding: 0.25rem 0.5rem;" %>
+    <% end %>
+  <% else %>
+    <%= form_with(model: Relationship.new,
+                  class: "d-inline") do |form| %>
+      <%= form.hidden_field :followed_id, value: user.id %>
+      <%= form.submit "Follow", class: "btn btn-xs btn-primary border-0", style: "font-size: 0.75rem; padding: 0.25rem 0.5rem;" %>
+    <% end %>
+  <% end %>
+</div>

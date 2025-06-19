@@ -15,23 +15,43 @@
       <i class="fas fa-envelope me-1"></i>
       <%= truncate(user.email, length: 25) %>
     </p>
-    
-    <!-- User Info -->
+      <!-- User Info -->
     <div class="user-meta mb-3">
-      <small class="text-muted d-block">
-        <i class="fas fa-calendar-alt me-1"></i>
-        Joined <%= user.created_at.strftime("%b %Y") %>
-      </small>
-      <small class="text-muted d-block mt-1">
-        <i class="fas fa-clock me-1"></i>
-        Active <%= time_ago_in_words(user.updated_at) %> ago
-      </small>
+      <div class="row text-center">
+        <div class="col-4">
+          <small class="text-muted">
+            <strong><%= user.microposts.count %></strong><br>
+            Posts
+          </small>
+        </div>
+        <div class="col-4">
+          <small class="text-muted">
+            <strong><%= user.following.count %></strong><br>
+            Following
+          </small>
+        </div>
+        <div class="col-4">
+          <small class="text-muted">
+            <strong><%= user.followers.count %></strong><br>
+            Followers
+          </small>
+        </div>
+      </div>
+      <div class="mt-2">
+        <small class="text-muted d-block">
+          <i class="fas fa-calendar-alt me-1"></i>
+          Joined <%= user.created_at.strftime("%b %Y") %>
+        </small>
+      </div>
     </div>
     
-    <!-- Action Button -->
+    <!-- Action Buttons -->
     <div class="card-actions">
       <%= link_to "View Profile", user_path(user), 
-                  class: "btn btn-outline-primary btn-sm" %>
+                  class: "btn btn-outline-primary btn-sm me-1" %>
+      <% if logged_in? && !current_user?(user) %>
+        <%= render 'follow_form', user: user %>
+      <% end %>
     </div>
   </div>
 </div>

@@ -1,0 +1,118 @@
+<% provide(:title, @title) %>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <!-- User Profile Header -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <%= gravatar_for @user, size: 50 %>
+            </div>
+            <div class="col">
+              <h4 class="mb-0"><%= @user.name %></h4>
+              <small class="opacity-75"><%= @user.email %></small>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row text-center">
+            <div class="col-4">
+              <%= link_to @user, class: "text-decoration-none" do %>
+                <div class="stat-item">
+                  <h5 class="text-primary mb-0"><%= @user.microposts.count %></h5>
+                  <small class="text-muted">Microposts</small>
+                </div>
+              <% end %>
+            </div>
+            <div class="col-4">
+              <%= link_to following_user_path(@user), class: "text-decoration-none #{'text-primary fw-bold' if @title == 'Following'}" do %>
+                <div class="stat-item">
+                  <h5 class="mb-0 <%= 'text-primary' if @title == 'Following' %>"><%= @user.following.count %></h5>
+                  <small class="text-muted">Following</small>
+                </div>
+              <% end %>
+            </div>
+            <div class="col-4">
+              <%= link_to followers_user_path(@user), class: "text-decoration-none #{'text-primary fw-bold' if @title == 'Followers'}" do %>
+                <div class="stat-item">
+                  <h5 class="mb-0 <%= 'text-primary' if @title == 'Followers' %>"><%= @user.followers.count %></h5>
+                  <small class="text-muted">Followers</small>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users List -->
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-users me-2"></i>
+            <%= @title %> (<%= @users.count %>)
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <% if @users.any? %>
+            <div class="list-group list-group-flush">
+              <% @users.each do |user| %>
+                <div class="list-group-item">
+                  <div class="row align-items-center">
+                    <div class="col-auto">
+                      <%= link_to user do %>
+                        <%= gravatar_for user, size: 40 %>
+                      <% end %>
+                    </div>
+                    <div class="col">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h6 class="mb-0">
+                            <%= link_to user.name, user, class: "text-decoration-none" %>
+                          </h6>
+                          <small class="text-muted"><%= user.email %></small>
+                        </div>
+                        <div>
+                          <%= render 'follow_form', user: user if logged_in? %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            
+            <!-- Pagination -->
+            <% if @users.total_pages > 1 %>
+              <div class="card-footer bg-light">
+                <%= enhanced_paginate @users %>
+                <div class="text-center mt-2">
+                  <%= pagination_info @users %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="text-center py-5">
+              <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+              <h6 class="text-muted">No <%= @title.downcase %> yet</h6>
+              <p class="text-muted">
+                <% if @title == "Following" %>
+                  <%= @user.name %> is not following anyone yet.
+                <% else %>
+                  <%= @user.name %> has no followers yet.
+                <% end %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="mt-4 text-center">
+        <%= link_to "← Back to Profile", @user, class: "btn btn-outline-secondary" %>
+        <%= link_to "All Users", users_path, class: "btn btn-outline-primary ms-2" %>
+      </div>
+    </div>
+  </div>
+</div>

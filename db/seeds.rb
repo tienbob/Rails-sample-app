@@ -6,15 +6,6 @@
 unless Rails.env.production?
   puts "Creating sample users..."
   
-  # Create main example user
-  user = User.find_or_create_by!(email: "example@railstutorial.org") do |u|
-    u.name = "Example User"
-    u.password = "foobar"
-    u.password_confirmation = "foobar"
-    u.activated = true
-    u.activated_at = Time.zone.now
-  end
-  
   # Create additional users
   99.times do |n|
     name = "User #{n+1}"
@@ -54,6 +45,14 @@ unless Rails.env.production?
   end
   
   puts "Sample microposts created!"
+
+# Create following relationships.
+users = User.all
+user = users.first
+following = users[2..50]
+followers = users[3..40]
+following.each { |followed| user.follow_user(followed) }
+followers.each { |follower| follower.follow_user(user) }
 end
 
 puts "Seeding complete!"
