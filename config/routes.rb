@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get "/login", to: "sessions#new"
   post "/login", to: "sessions#create"
   get "/debug_session", to: "sessions#debug_info"
+  get "/debug_db", to: "static_pages#debug_db"
   delete "/logout", to: "sessions#destroy"
   get '/microposts', to: 'static_pages#home'
   resources :users
