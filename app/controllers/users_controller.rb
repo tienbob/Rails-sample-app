@@ -76,11 +76,12 @@ class UsersController < ApplicationController
     render 'show_follow'
   end
 
-  private    def set_user
-      @user = User.find(params[:id])
+  private    
+    def set_user
+        @user = User.find(params[:id])
     rescue ActiveRecord::RecordNotFound
-      flash[:error] = "User not found"
-      redirect_to root_path
+        flash[:error] = "User not found"
+        redirect_to root_path
     end
 
     def user_params

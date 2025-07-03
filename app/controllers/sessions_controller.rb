@@ -24,7 +24,7 @@ class SessionsController < ApplicationController
     end
     
     user = User.find_by(email: email.downcase.strip)
-      # Authenticate: user exists AND password matches
+    # Authenticate: user exists AND password matches
     # user.authenticate comes from has_secure_password in User model
     if user && user.authenticate(password)
       if user.activated?

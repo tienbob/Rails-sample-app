@@ -278,9 +278,47 @@ end
 ```
 
 ### 7. Other Enumerable Methods
-- `map`, `select`, `reject`, `find`, etc. – all take blocks and loop internally.
+- Ruby provides many powerful methods for working with collections (arrays, hashes, ranges, etc.). These methods take blocks and loop internally, making code concise and expressive.
 
-**Note:** Prefer `each` and other enumerable methods for idiomatic Ruby code.
+| Method   | What it does                                 | Example usage                      | Example result           |
+|----------|----------------------------------------------|------------------------------------|-------------------------|
+| `map`    | Transforms each element, returns new array   | `[1,2,3].map { |n| n * 2 }`        | `[2, 4, 6]`             |
+| `select` | Keeps elements where block returns true      | `[1,2,3,4].select { |n| n.even? }` | `[2, 4]`                |
+| `reject` | Removes elements where block returns true    | `[1,2,3,4].reject { |n| n < 3 }`   | `[3, 4]`                |
+| `find`   | Returns the first element matching block     | `[1,2,3,4].find { |n| n > 2 }`     | `3`                     |
+| `all?`   | Returns true if all elements match block     | `[2,4,6].all? { |n| n.even? }`     | `true`                  |
+| `any?`   | Returns true if any element matches block    | `[1,3,5].any? { |n| n.even? }`     | `false`                 |
+| `count`  | Counts elements (optionally with block)      | `[1,2,3,2].count(2)`               | `2`                     |
+| `reduce` | Combines all elements into a single value    | `[1,2,3,4].reduce(:+)`             | `10`                    |
+
+**Examples:**
+```ruby
+# map: double each number
+[1,2,3].map { |n| n * 2 }           # => [2, 4, 6]
+
+# select: keep even numbers
+[1,2,3,4].select { |n| n.even? }    # => [2, 4]
+
+# reject: remove numbers less than 3
+[1,2,3,4].reject { |n| n < 3 }      # => [3, 4]
+
+# find: first number greater than 2
+[1,2,3,4].find { |n| n > 2 }        # => 3
+
+# all?: are all numbers even?
+[2,4,6].all? { |n| n.even? }        # => true
+
+# any?: is any number even?
+[1,3,5].any? { |n| n.even? }        # => false
+
+# count: how many times does 2 appear?
+[1,2,3,2].count(2)                  # => 2
+
+# reduce: sum all numbers
+[1,2,3,4].reduce(:+)                # => 10
+```
+
+**Tip:** These methods are available on all `Enumerable` objects (arrays, hashes, ranges, etc.). Prefer them over manual loops for clarity and brevity.
 
 ---
 
@@ -837,6 +875,9 @@ rails routes
 
 # Precompile assets (for production)
 rails assets:precompile
+
+# Rails authentication (native on Rail 8) login logout only no register
+rails generate authentication
 ```
 
 ---
