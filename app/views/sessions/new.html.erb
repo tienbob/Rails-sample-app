@@ -1,7 +1,6 @@
 <% provide(:title, "Log in") %>
 <% content_for :head do %>
   <%= stylesheet_link_tag 'sessions_login', 'data-turbo-track': 'reload' %>
-  <%= javascript_include_tag 'sessions_login', 'data-turbo-track': 'reload', defer: true %>
 <% end %>
 
 <div class="login-container">
@@ -21,7 +20,7 @@
           
           <!-- Form -->
           <div class="login-body">
-            <%= form_with(scope: :session, url: login_path, local: true, html: { class: "login-form" }) do |f| %>
+            <%= form_with(scope: :session, url: login_path, local: true, html: { class: "login-form", "data-controller": "sessions-login" }) do |f| %>
 
               <!-- Flash Messages -->
               <% if flash[:danger] %>

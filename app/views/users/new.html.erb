@@ -1,7 +1,6 @@
 <% provide(:title, 'Sign up') %>
 <% content_for :head do %>
   <%= stylesheet_link_tag 'users_signup', 'data-turbo-track': 'reload' %>
-  <%= javascript_include_tag 'users_signup', 'data-turbo-track': 'reload', defer: true %>
 <% end %>
 
 <div class="container mt-4">
@@ -18,7 +17,7 @@
         </div>
         
         <div class="card-body p-4">
-          <%= form_with(model: @user, local: true, html: { class: "needs-validation", novalidate: true }) do |f| %>
+          <%= form_with(model: @user, local: true, html: { class: "needs-validation", novalidate: true, "data-controller": "users-signup" }) do |f| %>
             
             <!-- Error Messages -->
             <%= render 'shared/error_messages', object: @user %>

@@ -18,7 +18,7 @@
         </div>
         
         <div class="card-body p-4">
-          <%= form_with(model: @user, local: true, html: { class: "needs-validation", novalidate: true }) do |f| %>
+        <%= form_with(model: @user, local: true, html: { class: "needs-validation", novalidate: true, "data-controller": "users-signup" }) do |f| %>
             
             <!-- Error Messages -->
             <%= render 'shared/error_messages', object: @user %>
