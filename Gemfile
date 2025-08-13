@@ -12,7 +12,7 @@ gem "will_paginate", "~> 4.0"
 gem "importmap-rails", "~> 1.1"
 gem "turbo-rails",     "~> 1.4"
 gem "stimulus-rails",  "~> 1.2"
-gem "jbuilder",        "~> 2.11"
+gem "jbuilder",        "~> 2.14"
 gem "puma",            "~> 6.0"
 gem "bootsnap",        "~> 1.16", require: false
 gem "fiddle", "~> 1.1.0"
