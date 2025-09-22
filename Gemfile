@@ -20,7 +20,7 @@ gem "rails-controller-testing"
 gem "pry"
 gem "thruster", require: false
 group :development, :test do
-  gem "sqlite3", "~> 2.1"
+  gem "sqlite3", "~> 2.7"
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
 end
 
